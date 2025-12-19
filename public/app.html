@@ -8367,9 +8367,72 @@
             }
         });
 
+
+        // ═══════════════════════════════════════════════════════════════════
+        // CORRECTIONS V1.1 - Fonctions manquantes
+        // ═══════════════════════════════════════════════════════════════════
+
+        // Fonction: editPatient
+        function editPatient(id) {
+            const patient = patientsData.find(p => p.id === id);
+            if (!patient) {
+                showNotification('Patient non trouvé', 'error');
+                return;
+            }
+            
+            openModal('newPatient');
+            
+            const modalTitle = document.querySelector('#modal-newPatient .modal-header h3');
+            if (modalTitle) modalTitle.textContent = 'Modifier le patient';
+            
+            document.getElementById('patientNom').value = patient.nom || '';
+            document.getElementById('patientPrenom').value = patient.prenom || '';
+            document.getElementById('patientTel').value = patient.telephone || '';
+            document.getElementById('patientEmail').value = patient.email || '';
+            document.getElementById('patientDateNaissance').value = patient.date_naissance || '';
+            document.getElementById('patientAdresse').value = patient.adresse || '';
+            document.getElementById('patientNotes').value = patient.notes_medicales || '';
+            
+            const form = document.getElementById('formNewPatient');
+            if (form) form.dataset.editId = id;
+            
+            showNotification('Modification du patient: ' + patient.prenom + ' ' + patient.nom, 'info');
+        }
+
+        // Fonction: saveNewOrdonnance
+        function saveNewOrdonnance() {
+            const patientId = document.getElementById('ordonnancePatient').value;
+            if (!patientId) {
+                showNotification('Veuillez sélectionner un patient', 'error');
+                return;
+            }
+            
+            const prescriptions = document.getElementById('ordonnancePrescriptions').value;
+            if (!prescriptions.trim()) {
+                showNotification('Veuillez saisir les prescriptions', 'error');
+                return;
+            }
+            
+            closeModal('newOrdonnance');
+            showNotification('✅ Ordonnance créée avec succès', 'success');
+            
+            document.getElementById('ordonnancePatient').value = '';
+            document.getElementById('ordonnancePrescriptions').value = '';
+        }
+
+        // Fonction: saveNewCertificat
+        function saveNewCertificat() {
+            const patientId = document.getElementById('certificatPatient').value;
+            if (!patientId) {
+                showNotification('Veuillez sélectionner un patient', 'error');
+                return;
+            }
+            
+            closeModal('newCertificat');
+            showNotification('✅ Certificat médical créé avec succès', 'success');
+        }
+
     </script>
     
-    <!-- Script de corrections -->
-    <script src="/js/corrections.js"></script>
 </body>
 </html>
