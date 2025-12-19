@@ -13,9 +13,8 @@ const path = require('path');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: false
 });
-
 async function initDatabase() {
   console.log('🚀 Initialisation de la base de données DentalCare Solo...\n');
   
