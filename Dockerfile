@@ -1,0 +1,19 @@
+# DentalCare Solo - Dockerfile
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY package*.json ./
+
+# Installer les dépendances
+RUN npm install --production
+
+# Copier le reste des fichiers
+COPY . .
+
+# Exposer le port
+EXPOSE 3000
+
+# Démarrer l'application
+CMD ["node", "server.js"]
