@@ -19,8 +19,9 @@ const PORT = process.env.PORT || 3000;
 // ═══════════════════════════════════════════════════════════
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: false
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
+
 // Test de connexion DB
 pool.query('SELECT NOW()')
   .then(() => console.log('✅ Base de données connectée'))
@@ -35,6 +36,7 @@ app.use(cookieParser());
 
 // Servir les fichiers statiques
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/js', express.static(path.join(__dirname, 'public/js')));
 
 // ═══════════════════════════════════════════════════════════
 // AUTHENTIFICATION

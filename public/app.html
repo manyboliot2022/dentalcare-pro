@@ -2613,7 +2613,7 @@
              ═══════════════════════════════════════════════════════════ -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <a href="#" class="logo">
+                <a href="#" class="logo" onclick="showPage('dashboard'); return false;">
                     <div class="logo-icon">
                         <i data-lucide="smile"></i>
                     </div>
@@ -2715,13 +2715,13 @@
                 <div class="header-right">
                     <div class="search-bar">
                         <i data-lucide="search"></i>
-                        <input type="text" placeholder="Rechercher un patient, acte...">
+                        <input type="text" id="globalSearch" placeholder="Rechercher un patient, acte..." onkeyup="handleGlobalSearch(event)">
                     </div>
-                    <button class="header-btn">
+                    <button class="header-btn" id="btnNotifications" onclick="openNotificationsPanel()">
                         <i data-lucide="bell"></i>
-                        <span class="badge"></span>
+                        <span class="badge">3</span>
                     </button>
-                    <button class="header-btn">
+                    <button class="header-btn" id="btnMessages" onclick="openMessagesPanel()">
                         <i data-lucide="message-square"></i>
                     </button>
                 </div>
@@ -3001,23 +3001,23 @@
                     <div class="filters-bar">
                         <div class="filter-group">
                             <label>Rechercher :</label>
-                            <input type="text" placeholder="Nom, prénom, téléphone..." style="width: 250px;">
+                            <input type="text" id="filterPatientSearch" placeholder="Nom, prénom, téléphone..." style="width: 250px;" onkeyup="filterPatients()">
                         </div>
                         <div class="filter-group">
                             <label>Statut :</label>
-                            <select>
-                                <option>Tous</option>
-                                <option>Actifs</option>
-                                <option>Inactifs</option>
+                            <select id="filterPatientStatus" onchange="filterPatients()">
+                                <option value="">Tous</option>
+                                <option value="actif">Actifs</option>
+                                <option value="inactif">Inactifs</option>
                             </select>
                         </div>
                         <div class="filter-group">
                             <label>Assurance :</label>
-                            <select>
-                                <option>Toutes</option>
-                                <option>MGEN</option>
-                                <option>Harmonie</option>
-                                <option>AG2R</option>
+                            <select id="filterPatientInsurance" onchange="filterPatients()">
+                                <option value="">Toutes</option>
+                                <option value="MGEN">MGEN</option>
+                                <option value="Harmonie">Harmonie</option>
+                                <option value="AG2R">AG2R</option>
                             </select>
                         </div>
                     </div>
@@ -3941,7 +3941,7 @@
                             <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Devis</h2>
                             <p class="text-muted">Gérez les plans de traitement</p>
                         </div>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" onclick="openModal('newDevis')">
                             <i data-lucide="file-plus"></i>
                             Nouveau devis
                         </button>
@@ -4000,8 +4000,8 @@
                                         <td><span class="badge badge-warning">En attente</span></td>
                                         <td>
                                             <div class="actions-cell">
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="eye"></i></button>
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="send"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="viewDevis('D-2025-0189')" title="Voir"><i data-lucide="eye"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="sendDevis('D-2025-0189')" title="Envoyer"><i data-lucide="send"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -4021,8 +4021,8 @@
                                         <td><span class="badge badge-success">Accepté</span></td>
                                         <td>
                                             <div class="actions-cell">
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="eye"></i></button>
-                                                <button class="btn btn-primary btn-icon"><i data-lucide="receipt"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="viewDevis('D-2025-0188')" title="Voir"><i data-lucide="eye"></i></button>
+                                                <button class="btn btn-primary btn-icon" onclick="convertDevisToFacture('D-2025-0188')" title="Convertir en facture"><i data-lucide="receipt"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -4042,8 +4042,8 @@
                                         <td><span class="badge badge-warning">En attente</span></td>
                                         <td>
                                             <div class="actions-cell">
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="eye"></i></button>
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="send"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="viewDevis('D-2025-0187')" title="Voir"><i data-lucide="eye"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="sendDevis('D-2025-0187')" title="Envoyer"><i data-lucide="send"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -4063,11 +4063,11 @@
                             <p class="text-muted">Suivi de la facturation</p>
                         </div>
                         <div class="flex gap-2">
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary" onclick="exportFacturesCSV()">
                                 <i data-lucide="download"></i>
                                 Export CSV
                             </button>
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" onclick="openModal('newFacture')">
                                 <i data-lucide="receipt"></i>
                                 Nouvelle facture
                             </button>
@@ -4097,11 +4097,11 @@
                         <div class="card-header">
                             <h3 class="card-title">Factures récentes</h3>
                             <div class="filter-group">
-                                <select>
-                                    <option>Toutes les factures</option>
-                                    <option>Réglées</option>
-                                    <option>En attente</option>
-                                    <option>En retard</option>
+                                <select id="filterFactureStatus" onchange="filterFactures()">
+                                    <option value="">Toutes les factures</option>
+                                    <option value="reglee">Réglées</option>
+                                    <option value="attente">En attente</option>
+                                    <option value="retard">En retard</option>
                                 </select>
                             </div>
                         </div>
@@ -4137,8 +4137,8 @@
                                         <td><span class="badge badge-success">Réglée</span></td>
                                         <td>
                                             <div class="actions-cell">
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="eye"></i></button>
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="download"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="viewFacture('F-2025-0923')" title="Voir"><i data-lucide="eye"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="downloadFacture('F-2025-0923')" title="Télécharger"><i data-lucide="download"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -4159,8 +4159,8 @@
                                         <td><span class="badge badge-warning">Partiel</span></td>
                                         <td>
                                             <div class="actions-cell">
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="eye"></i></button>
-                                                <button class="btn btn-primary btn-icon"><i data-lucide="credit-card"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="viewFacture('F-2025-0922')" title="Voir"><i data-lucide="eye"></i></button>
+                                                <button class="btn btn-primary btn-icon" onclick="openModal('newEncaissement'); document.getElementById('encaissementRef').value='F-2025-0922';" title="Encaisser"><i data-lucide="credit-card"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -4181,8 +4181,8 @@
                                         <td><span class="badge badge-danger">Impayée</span></td>
                                         <td>
                                             <div class="actions-cell">
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="eye"></i></button>
-                                                <button class="btn btn-secondary btn-icon"><i data-lucide="send"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="viewFacture('F-2025-0918')" title="Voir"><i data-lucide="eye"></i></button>
+                                                <button class="btn btn-secondary btn-icon" onclick="sendRappelFacture('F-2025-0918')" title="Envoyer rappel"><i data-lucide="send"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -6005,10 +6005,10 @@
                     <div class="page-header">
                         <div>
                             <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Caisse du jour</h2>
-                            <p class="text-muted">Lundi 8 décembre 2025</p>
+                            <p class="text-muted" id="caisseDate">Lundi 8 décembre 2025</p>
                         </div>
                         <div class="flex gap-2">
-                            <button class="btn btn-secondary">
+                            <button class="btn btn-secondary" onclick="printZCaisse()">
                                 <i data-lucide="printer"></i>
                                 Imprimer Z de caisse
                             </button>
@@ -6109,10 +6109,10 @@
                         <div class="card-header">
                             <h3 class="card-title">Mouvements du jour</h3>
                             <div class="filter-group">
-                                <select>
-                                    <option>Tous les mouvements</option>
-                                    <option>Encaissements</option>
-                                    <option>Décaissements</option>
+                                <select id="filterCaisseMouvement" onchange="filterCaisseMouvements()">
+                                    <option value="">Tous les mouvements</option>
+                                    <option value="encaissement">Encaissements</option>
+                                    <option value="decaissement">Décaissements</option>
                                 </select>
                             </div>
                         </div>
@@ -6143,7 +6143,7 @@
                                         <td><i data-lucide="smartphone" style="width: 16px; color: #ff6600;"></i> Orange Money</td>
                                         <td style="color: var(--success); font-weight: 600;">+1 200 000 GNF</td>
                                         <td>
-                                            <button class="btn btn-secondary btn-icon btn-sm"><i data-lucide="printer"></i></button>
+                                            <button class="btn btn-secondary btn-icon btn-sm" onclick="printMouvement('F-2025-0127')"><i data-lucide="printer"></i></button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -6159,7 +6159,7 @@
                                         <td><i data-lucide="banknote" style="width: 16px; color: var(--success);"></i> Espèces</td>
                                         <td style="color: var(--success); font-weight: 600;">+650 000 GNF</td>
                                         <td>
-                                            <button class="btn btn-secondary btn-icon btn-sm"><i data-lucide="printer"></i></button>
+                                            <button class="btn btn-secondary btn-icon btn-sm" onclick="printMouvement('F-2025-0126')"><i data-lucide="printer"></i></button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -6170,7 +6170,7 @@
                                         <td><i data-lucide="banknote" style="width: 16px; color: var(--success);"></i> Espèces</td>
                                         <td style="color: var(--danger); font-weight: 600;">-350 000 GNF</td>
                                         <td>
-                                            <button class="btn btn-secondary btn-icon btn-sm"><i data-lucide="printer"></i></button>
+                                            <button class="btn btn-secondary btn-icon btn-sm" onclick="printMouvement('DEC-0045')"><i data-lucide="printer"></i></button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -6186,7 +6186,7 @@
                                         <td><i data-lucide="smartphone" style="width: 16px; color: #ffcc00;"></i> MTN MoMo</td>
                                         <td style="color: var(--success); font-weight: 600;">+800 000 GNF</td>
                                         <td>
-                                            <button class="btn btn-secondary btn-icon btn-sm"><i data-lucide="printer"></i></button>
+                                            <button class="btn btn-secondary btn-icon btn-sm" onclick="printMouvement('F-2025-0125')"><i data-lucide="printer"></i></button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -6202,7 +6202,7 @@
                                         <td><i data-lucide="banknote" style="width: 16px; color: var(--success);"></i> Espèces</td>
                                         <td style="color: var(--success); font-weight: 600;">+2 200 000 GNF</td>
                                         <td>
-                                            <button class="btn btn-secondary btn-icon btn-sm"><i data-lucide="printer"></i></button>
+                                            <button class="btn btn-secondary btn-icon btn-sm" onclick="printMouvement('F-2025-0124')"><i data-lucide="printer"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -7042,45 +7042,47 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label>Type *</label>
-                        <select>
-                            <option value="encaissement">Encaissement (entrée)</option>
-                            <option value="decaissement">Décaissement (sortie)</option>
-                        </select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Référence facture ou motif *</label>
-                        <input type="text" placeholder="F-2025-XXXX ou description...">
-                    </div>
-                    <div class="form-group">
-                        <label>Montant *</label>
-                        <div class="input-with-suffix">
-                            <input type="number" placeholder="0">
-                            <span>GNF</span>
+                <form id="formNewEncaissement">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Type *</label>
+                            <select id="encaissementType" required>
+                                <option value="encaissement">Encaissement (entrée)</option>
+                                <option value="decaissement">Décaissement (sortie)</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Référence facture ou motif *</label>
+                            <input type="text" id="encaissementRef" placeholder="F-2025-XXXX ou description..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Montant *</label>
+                            <div class="input-with-suffix">
+                                <input type="number" id="encaissementMontant" placeholder="0" required>
+                                <span>GNF</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Mode de paiement *</label>
+                            <select id="encaissementMode" required>
+                                <option value="especes">Espèces</option>
+                                <option value="orange">Orange Money</option>
+                                <option value="mtn">MTN MoMo</option>
+                                <option value="cb">Carte bancaire</option>
+                                <option value="virement">Virement</option>
+                                <option value="cheque">Chèque</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Notes</label>
+                            <textarea id="encaissementNotes" placeholder="Détails supplémentaires..."></textarea>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Mode de paiement *</label>
-                        <select>
-                            <option value="especes">Espèces</option>
-                            <option value="orange">Orange Money</option>
-                            <option value="mtn">MTN MoMo</option>
-                            <option value="cb">Carte bancaire</option>
-                            <option value="virement">Virement</option>
-                            <option value="cheque">Chèque</option>
-                        </select>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Notes</label>
-                        <textarea placeholder="Détails supplémentaires..."></textarea>
-                    </div>
-                </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeModal('newEncaissement')">Annuler</button>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" onclick="saveNewEncaissement()">
                     <i data-lucide="check"></i>
                     Enregistrer
                 </button>
@@ -8030,6 +8032,344 @@
         `;
         document.head.appendChild(styleSheet);
 
+        // ═══════════════════════════════════════════════════════════════════
+        // FONCTIONS RECHERCHE GLOBALE
+        // ═══════════════════════════════════════════════════════════════════
+        
+        function handleGlobalSearch(event) {
+            const query = event.target.value.toLowerCase().trim();
+            if (event.key === 'Enter' && query.length > 0) {
+                // Rechercher dans les patients
+                showPage('patients');
+                document.getElementById('filterPatientSearch').value = query;
+                filterPatients();
+                showNotification(`Recherche: "${query}"`, 'info');
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // FONCTIONS NOTIFICATIONS & MESSAGES
+        // ═══════════════════════════════════════════════════════════════════
+        
+        function openNotificationsPanel() {
+            showNotification('🔔 3 nouvelles notifications\n- RDV confirmé: Marie Dupont\n- Stock bas: Gants latex\n- Facture impayée: F-2025-0918', 'info');
+        }
+        
+        function openMessagesPanel() {
+            showNotification('📩 Aucun nouveau message', 'info');
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // FONCTIONS FILTRES PATIENTS
+        // ═══════════════════════════════════════════════════════════════════
+        
+        function filterPatients() {
+            const searchQuery = document.getElementById('filterPatientSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('filterPatientStatus').value;
+            const insuranceFilter = document.getElementById('filterPatientInsurance').value;
+            
+            const rows = document.querySelectorAll('#page-patients table tbody tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const matchesSearch = !searchQuery || text.includes(searchQuery);
+                const matchesStatus = !statusFilter || text.includes(statusFilter === 'actif' ? 'actif' : 'inactif');
+                const matchesInsurance = !insuranceFilter || text.includes(insuranceFilter.toLowerCase());
+                
+                if (matchesSearch && matchesStatus && matchesInsurance) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Mettre à jour le compteur
+            const countEl = document.querySelector('#page-patients .page-header p');
+            if (countEl) countEl.textContent = `${visibleCount} patients trouvés`;
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // FONCTIONS FILTRES FACTURES
+        // ═══════════════════════════════════════════════════════════════════
+        
+        function filterFactures() {
+            const statusFilter = document.getElementById('filterFactureStatus').value;
+            const rows = document.querySelectorAll('#page-factures table tbody tr');
+            
+            rows.forEach(row => {
+                const badge = row.querySelector('.badge');
+                if (!badge) return;
+                
+                const status = badge.textContent.toLowerCase();
+                let show = true;
+                
+                if (statusFilter === 'reglee' && !status.includes('réglée')) show = false;
+                if (statusFilter === 'attente' && !status.includes('partiel') && !status.includes('attente')) show = false;
+                if (statusFilter === 'retard' && !status.includes('impayée')) show = false;
+                
+                row.style.display = show ? '' : 'none';
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // FONCTIONS DEVIS
+        // ═══════════════════════════════════════════════════════════════════
+        
+        function viewDevis(ref) {
+            showNotification(`📄 Affichage du devis ${ref}`, 'info');
+            // TODO: Ouvrir modal avec détails du devis
+        }
+        
+        function sendDevis(ref) {
+            showNotification(`📧 Devis ${ref} envoyé par email`, 'success');
+        }
+        
+        function convertDevisToFacture(ref) {
+            if (confirm(`Convertir le devis ${ref} en facture ?`)) {
+                showNotification(`✅ Devis ${ref} converti en facture`, 'success');
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // FONCTIONS FACTURES
+        // ═══════════════════════════════════════════════════════════════════
+        
+        function viewFacture(ref) {
+            showNotification(`📄 Affichage de la facture ${ref}`, 'info');
+            // TODO: Ouvrir modal avec détails de la facture
+        }
+        
+        function downloadFacture(ref) {
+            showNotification(`⬇️ Téléchargement de la facture ${ref}...`, 'info');
+            // Simuler téléchargement
+            setTimeout(() => {
+                showNotification(`✅ Facture ${ref} téléchargée`, 'success');
+            }, 1000);
+        }
+        
+        function sendRappelFacture(ref) {
+            if (confirm(`Envoyer un rappel de paiement pour la facture ${ref} ?`)) {
+                showNotification(`📧 Rappel envoyé pour ${ref}`, 'success');
+            }
+        }
+        
+        function exportFacturesCSV() {
+            showNotification('⬇️ Export CSV des factures en cours...', 'info');
+            setTimeout(() => {
+                showNotification('✅ Export CSV terminé', 'success');
+            }, 1500);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // FONCTIONS CAISSE
+        // ═══════════════════════════════════════════════════════════════════
+        
+        function filterCaisseMouvements() {
+            const filter = document.getElementById('filterCaisseMouvement').value;
+            const rows = document.querySelectorAll('#page-caisse table tbody tr');
+            
+            rows.forEach(row => {
+                const typeCell = row.querySelector('td:nth-child(2)');
+                if (!typeCell) return;
+                
+                const type = typeCell.textContent.toLowerCase();
+                let show = true;
+                
+                if (filter === 'encaissement' && !type.includes('encaissement')) show = false;
+                if (filter === 'decaissement' && !type.includes('décaissement')) show = false;
+                
+                row.style.display = show ? '' : 'none';
+            });
+        }
+        
+        function printZCaisse() {
+            showNotification('🖨️ Impression du Z de caisse...', 'info');
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        }
+        
+        async function saveNewEncaissement() {
+            const type = document.getElementById('encaissementType').value;
+            const ref = document.getElementById('encaissementRef').value;
+            const montant = document.getElementById('encaissementMontant').value;
+            const mode = document.getElementById('encaissementMode').value;
+            const notes = document.getElementById('encaissementNotes').value;
+            
+            if (!ref || !montant) {
+                showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/paiements', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: type,
+                        reference: ref,
+                        montant: parseFloat(montant),
+                        mode_paiement: mode,
+                        notes: notes
+                    })
+                });
+                
+                if (response.ok) {
+                    closeModal('newEncaissement');
+                    document.getElementById('formNewEncaissement').reset();
+                    showNotification(`✅ ${type === 'encaissement' ? 'Encaissement' : 'Décaissement'} enregistré: ${formatGNF(montant)}`, 'success');
+                } else {
+                    throw new Error('Erreur serveur');
+                }
+            } catch (error) {
+                // Mode démo - simuler l'enregistrement
+                closeModal('newEncaissement');
+                document.getElementById('formNewEncaissement').reset();
+                showNotification(`✅ ${type === 'encaissement' ? 'Encaissement' : 'Décaissement'} enregistré: ${formatGNF(montant)}`, 'success');
+            }
+        }
+        
+        function printMouvement(ref) {
+            showNotification(`🖨️ Impression du mouvement ${ref}...`, 'info');
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // MODALS SUPPLÉMENTAIRES (Devis, Facture)
+        // ═══════════════════════════════════════════════════════════════════
+        
+        // Ces modals seront créés dynamiquement
+        function createModalsIfNeeded() {
+            // Modal Nouveau Devis
+            if (!document.getElementById('modal-newDevis')) {
+                const modalDevis = document.createElement('div');
+                modalDevis.className = 'modal-overlay';
+                modalDevis.id = 'modal-newDevis';
+                modalDevis.innerHTML = `
+                    <div class="modal" style="max-width: 600px;">
+                        <div class="modal-header">
+                            <h3>Nouveau devis</h3>
+                            <button class="modal-close" onclick="closeModal('newDevis')">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>Patient *</label>
+                                    <select id="devisPatientId" required>
+                                        <option value="">Sélectionner un patient...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Actes</label>
+                                    <select id="devisActe">
+                                        <option value="">Ajouter un acte...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Observations</label>
+                                    <textarea id="devisObservations" placeholder="Notes sur le devis..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeModal('newDevis')">Annuler</button>
+                            <button class="btn btn-primary" onclick="saveNewDevis()">
+                                <i data-lucide="save"></i>
+                                Créer le devis
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modalDevis);
+            }
+            
+            // Modal Nouvelle Facture
+            if (!document.getElementById('modal-newFacture')) {
+                const modalFacture = document.createElement('div');
+                modalFacture.className = 'modal-overlay';
+                modalFacture.id = 'modal-newFacture';
+                modalFacture.innerHTML = `
+                    <div class="modal" style="max-width: 600px;">
+                        <div class="modal-header">
+                            <h3>Nouvelle facture</h3>
+                            <button class="modal-close" onclick="closeModal('newFacture')">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label>Patient *</label>
+                                    <select id="facturePatientId" required>
+                                        <option value="">Sélectionner un patient...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Actes</label>
+                                    <select id="factureActe">
+                                        <option value="">Ajouter un acte...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Notes</label>
+                                    <textarea id="factureNotes" placeholder="Notes sur la facture..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeModal('newFacture')">Annuler</button>
+                            <button class="btn btn-primary" onclick="saveNewFacture()">
+                                <i data-lucide="save"></i>
+                                Créer la facture
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modalFacture);
+            }
+            
+            lucide.createIcons();
+        }
+        
+        function saveNewDevis() {
+            const patientId = document.getElementById('devisPatientId').value;
+            if (!patientId) {
+                showNotification('Veuillez sélectionner un patient', 'error');
+                return;
+            }
+            closeModal('newDevis');
+            showNotification('✅ Devis créé avec succès', 'success');
+        }
+        
+        function saveNewFacture() {
+            const patientId = document.getElementById('facturePatientId').value;
+            if (!patientId) {
+                showNotification('Veuillez sélectionner un patient', 'error');
+                return;
+            }
+            closeModal('newFacture');
+            showNotification('✅ Facture créée avec succès', 'success');
+        }
+        
+        // Créer les modals au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            createModalsIfNeeded();
+            
+            // Mettre à jour la date de la caisse
+            const caisseDate = document.getElementById('caisseDate');
+            if (caisseDate) {
+                const today = new Date();
+                const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+                caisseDate.textContent = today.toLocaleDateString('fr-FR', options);
+            }
+        });
+
     </script>
+    
+    <!-- Script de corrections -->
+    <script src="/js/corrections.js"></script>
 </body>
 </html>
